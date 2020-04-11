@@ -1,12 +1,13 @@
 <div class="grid-container">
   <!-- <h1 class="mat-h1">Smart Home Vis</h1> -->
-  <mat-grid-list cols="2" rowHeight="200px">
-    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+  <mat-grid-list cols="2" rowHeight="150px">
+    <!-- <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows"> -->
+      <mat-grid-tile  [colspan]=1 [rowspan]=2>  
       <mat-card class="dashboard-card" >
         <mat-card-header>
           <mat-card-title>
-            {{card.title}}
-
+            <!-- {{card.title}} -->
+            Activity
             <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
               <mat-icon>help_outline</mat-icon> Help
             </button> 
@@ -23,9 +24,104 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
-          <div>Card Content Here</div>
+          <app-daily-activity #dailyActivity></app-daily-activity>
+          <!-- NOTE: change heigth if you change rowHeight -->
+          <!-- <div style="position: relative; height:330px"> 
+            <canvas #lineChart></canvas>
+          </div> -->
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile  [colspan]=1 [rowspan]=2>  
+      <mat-card class="dashboard-card" >
+        <mat-card-header>
+          <mat-card-title>
+            <!-- {{card.title}} -->
+            Food Preparation in Microwave
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+              <mat-icon>help_outline</mat-icon> Help
+            </button> 
+            <button mat-raised-button class="fullscreen-button" color="primary">
+              <mat-icon>fullscreen</mat-icon> Fullscreen
+            </button> 
+            <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>            
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>Expand</button>
+              <button mat-menu-item>Remove</button>
+            </mat-menu> -->
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <!-- NOTE: change heigth if you change rowHeight -->
+          <div style="position: relative; height:330px"> 
+            <app-mw-usage #mwUsage [data]="chartData"></app-mw-usage>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+
+    <mat-grid-tile  [colspan]=1 [rowspan]=2>  
+      <mat-card class="dashboard-card" >
+        <mat-card-header>
+          <mat-card-title>
+            <!-- {{card.title}} -->
+            Hourly Activity
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+              <mat-icon>help_outline</mat-icon> Help
+            </button> 
+            <button mat-raised-button class="fullscreen-button" color="primary">
+              <mat-icon>fullscreen</mat-icon> Fullscreen
+            </button> 
+            <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>            
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>Expand</button>
+              <button mat-menu-item>Remove</button>
+            </mat-menu> -->
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <!-- NOTE: change heigth if you change rowHeight -->
+          <app-hourly-activity></app-hourly-activity>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+
+    <mat-grid-tile  [colspan]=1 [rowspan]=2>  
+      <mat-card class="dashboard-card" >
+        <mat-card-header>
+          <mat-card-title>
+            <!-- {{card.title}} -->
+            Medication
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+              <mat-icon>help_outline</mat-icon> Help
+            </button> 
+            <button mat-raised-button class="fullscreen-button" color="primary">
+              <mat-icon>fullscreen</mat-icon> Fullscreen
+            </button> 
+            <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>            
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>Expand</button>
+              <button mat-menu-item>Remove</button>
+            </mat-menu> -->
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <!-- NOTE: change heigth if you change rowHeight -->
+          <app-med-weekly></app-med-weekly>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
+
+
+  
 </div>

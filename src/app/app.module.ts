@@ -20,6 +20,14 @@ import { SmartHomeDashboardCumulativeComponent } from './smart-home-dashboard-cu
 import { HelpDialogComponentComponent } from './help-dialog-component/help-dialog-component.component';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
+import { ChartModule } from 'angular-highcharts';
+import { HighchartsService } from './highcharts.service';
+import { LinechartComponentComponent } from './linechart-component/linechart-component.component';
+import { MWUsageComponent } from './app-mw-usage/app-mw-usage.component';
+import { DailyActivityComponent } from './daily-activity/daily-activity.component';
+import { HourlyActivityComponent } from './hourly-activity/hourly-activity.component';
+import { MedWeeklyComponent } from './med-weekly/med-weekly.component';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +36,13 @@ import {MatDialogModule} from '@angular/material/dialog';
     SmartHomeDashboardComponent,
     TabComponentComponent,
     SmartHomeDashboardCumulativeComponent,
-    HelpDialogComponentComponent
+    HelpDialogComponentComponent,
+    LinechartComponentComponent,
+    MWUsageComponent,
+    DailyActivityComponent,
+    HourlyActivityComponent,
+    MedWeeklyComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -44,13 +58,15 @@ import {MatDialogModule} from '@angular/material/dialog';
     LayoutModule,
     MatToolbarModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    ChartModule
   ],
   providers: [
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'fill' }
-    }],
+    },
+    HighchartsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

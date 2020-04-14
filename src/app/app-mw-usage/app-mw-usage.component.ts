@@ -138,9 +138,9 @@ export class MWUsageComponent implements OnInit {
 
   ngAfterViewInit() {
 
-    var margin = { top: 20, right: 50, bottom: 50, left: 50 },
+    var margin = { top: 20, right: 20, bottom: 20, left: 50 },
       width = 600 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+      height = 190 - margin.top - margin.bottom;
 
     var parseTime = d3.timeParse("%H:%M:%S");
 
@@ -205,16 +205,6 @@ export class MWUsageComponent implements OnInit {
         .tickSize(-height)
       )
 
-
-    // this.svg.append("g")
-    //   .attr("class", "grid")
-    //   .style("stroke", "grey")
-    //   .style("stroke-width", 0.5)
-    //   .call(make_y_gridlines()
-    //     .tickSize(-width)
-    //     //.tickFormat("")
-    //   )
-
     d3.select(".grid").selectAll("text").remove();
     d3.select(".grid").select("path").remove();
 
@@ -240,21 +230,6 @@ export class MWUsageComponent implements OnInit {
       .x(function (d) { return x(d["time_parsed"]); })
       .y(function (d) { return y(d["duration_min"]); });
 
-    //warn line
-    // this.svg.append("line")
-    //   .attr("x1", x(x.domain()[0]))
-    //   .attr("y1", y(60))
-    //   .attr("x2", x(x.domain()[1]))
-    //   .attr("y2", y(60))
-    //   .style("stroke", "red")
-
-    // this.svg.append("text")
-    //   .attr("x", x(x.domain()[1]))
-    //   .attr("y", y(60) - 10)
-    //   .attr("dy", "1em")
-    //   .attr("text-anchor", "start")
-    //   .text("60 min")
-    //   .attr("class", "warnLineText")
 
     this.svg.selectAll("dot")
       .data(this.mwDoorSensorData)

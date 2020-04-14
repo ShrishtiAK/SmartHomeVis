@@ -31,6 +31,11 @@ import { MonthlyActivityComponent } from './monthly-activity/monthly-activity.co
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MedCalendarComponent } from './med-calendar/med-calendar.component';
+import { HelpMedComponent } from './help-dialog/help-med/help-med.component';
+import { HelpActivityDailyComponent } from './help-dialog/help-activity-daily/help-activity-daily.component';
+import { HelpMwUsageComponent } from './help-dialog/help-mw-usage/help-mw-usage.component';
+import { HelpActivityHourlyComponent } from './help-dialog/help-activity-hourly/help-activity-hourly.component';
+import { HelpActivityMonthlyComponent } from './help-dialog/help-activity-monthly/help-activity-monthly.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +52,11 @@ import { MedCalendarComponent } from './med-calendar/med-calendar.component';
     MedWeeklyComponent,
     MonthlyActivityComponent,
     MedCalendarComponent,
+    HelpMedComponent,
+    HelpActivityDailyComponent,
+    HelpMwUsageComponent,
+    HelpActivityHourlyComponent,
+    HelpActivityMonthlyComponent,
     
     
   ],

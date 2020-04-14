@@ -127,7 +127,7 @@ export class MedCalendarComponent implements OnInit {
       .attr("height", cellHeight)
       .style("fill", function (d, i) {
         if (d["event"] == "Refill")
-          return "steelblue";
+          return "dodgerblue";
         else if (d["event"] == d["day"])
           return "green"
         else
@@ -146,7 +146,7 @@ export class MedCalendarComponent implements OnInit {
       .attr("y", 0)
       .attr("height", cellHeight)
       .attr("width", cellWidth)
-      .style("fill", "whitesmoke")
+      .style("fill", "silver")
       .style("stroke", "white")
       .style("stroke-width", 2);
 
@@ -189,10 +189,10 @@ export class MedCalendarComponent implements OnInit {
 
 
     function mouseclick(d, i) {
-      dayG.selectAll("rect").style("stroke", "white");
+      dayG.selectAll("rect").style("opacity", 0.5);
 
       dayG.filter(dg => {return dg == d}).selectAll("rect")
-      .style("stroke", "black");
+      .style("opacity", 0.8);
 
       if (d in nestedSummaryData) {
         console.log(nestedSummaryData[d]);
@@ -207,14 +207,17 @@ export class MedCalendarComponent implements OnInit {
     function showMoreInfo(data) {
       d3.select(".moreInfo").remove();
 
+
       var moreInfo = svg.append("g")
         .attr("transform", "translate(450,0)")
         .attr("class", "moreInfo");
 
+     
 
       if (data != null) {
+      
         moreInfo.append("text")
-        .text("Time\tBox opened")
+        .text("Time | Box opened")
         .attr("x", 0)
         .attr("y", 0)
 
@@ -224,7 +227,7 @@ export class MedCalendarComponent implements OnInit {
           .append("text")
           .attr("class", "eventText")
           .text(function (d) {
-            return d["time"] + "\t" + d["event"];
+            return d["time"] + " | " + d["event"];
           })
           .attr("x", 0)
           .attr("y", function (d, i) {

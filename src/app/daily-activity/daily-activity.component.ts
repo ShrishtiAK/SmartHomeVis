@@ -255,7 +255,7 @@ export class DailyActivityComponent implements OnInit {
 
     var totalActivity = [];
 
-    var rooms = ["family room", "master bathroom", "kitchen", "master bedroom", "curtain sensor"];
+    var rooms = ["family room", "master bathroom", "kitchen", "master bedroom"];
     rooms.forEach(room => {
       var total = d3.sum(this.dailyActivityData.map(d => { return d[room] }));
       totalActivity.push({ room: room, total: total });
@@ -267,12 +267,30 @@ export class DailyActivityComponent implements OnInit {
 
     // Add the X Axis
     this.svg.append("g")
+      .attr("class", "xAxis")
       .attr("transform", "translate(0," + (+height + 10) + ")")
       .call(d3.axisBottom(x));
 
     // Add the Y Axis
     this.svg.append("g")
+      .attr("class", "yAxis")
       .call(d3.axisLeft(y).ticks(5));
+
+    function make_y_gridlines() {
+      return d3.axisLeft(y)
+        .ticks(5)
+    }
+
+    this.svg.append("g")
+      .attr("class", "gridA")
+      .style("stroke", "grey")
+      .call(make_y_gridlines()
+        .tickSize(-width)
+        //.tickFormat("")
+      )
+
+    d3.select(".gridA").selectAll("text").remove();
+    d3.select(".gridA").select("path").remove();
 
     var barPadding = 20;
     this.svg.selectAll(".bar")
@@ -298,13 +316,13 @@ export class DailyActivityComponent implements OnInit {
       .attr("x", 0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Events per hour");
+      .text("Total events");
 
     this.svg.append("text")
       .attr("class", "axisLabel")
       .attr("transform",
         "translate(" + (width / 2) + " ," +
-        (height + margin.top + 20) + ")")
+        (height + margin.top ) + ")")
       .style("text-anchor", "middle")
       .text("Room");
 

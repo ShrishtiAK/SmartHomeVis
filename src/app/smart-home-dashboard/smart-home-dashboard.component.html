@@ -7,8 +7,8 @@
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
-            Medication
-            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+            Medication - Feb 2020
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog('med')">
               <mat-icon>help_outline</mat-icon> Help
             </button>
             
@@ -27,7 +27,7 @@
           <mat-card-title>
             <!-- {{card.title}} -->
             Activity
-            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog('activity_daily')">
               <mat-icon>help_outline</mat-icon> Help
             </button>
             <!-- <button mat-raised-button class="fullscreen-button" color="primary">
@@ -58,7 +58,7 @@
           <mat-card-title>
             <!-- {{card.title}} -->
             Food Preparation in Microwave
-            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog('mw_usage')">
               <mat-icon>help_outline</mat-icon> Help
             </button>
             
@@ -87,7 +87,7 @@
           <mat-card-title>
             <!-- {{card.title}} -->
             Hourly Activity
-            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog('activity_hourly')">
               <mat-icon>help_outline</mat-icon> Help
             </button>
             
@@ -134,7 +134,7 @@
             <!-- {{card.title}} -->
             Monthly Activity
             
-            <button mat-raised-button class="help-button" color="primary" (click)="openDialog()">
+            <button mat-raised-button class="help-button" color="primary" (click)="openDialog('activity_monthly')">
               <mat-icon>help_outline</mat-icon> Help
             </button>
             <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">

@@ -6,6 +6,11 @@ import { HelpDialogComponentComponent } from '../help-dialog-component/help-dial
 import * as Chart from 'chart.js';
 import { MWUsageComponent } from '../app-mw-usage/app-mw-usage.component';
 import { DailyActivityComponent } from '../daily-activity/daily-activity.component';
+import { HelpMedComponent } from '../help-dialog/help-med/help-med.component';
+import { HelpActivityHourlyComponent } from '../help-dialog/help-activity-hourly/help-activity-hourly.component';
+import { HelpActivityMonthlyComponent } from '../help-dialog/help-activity-monthly/help-activity-monthly.component';
+import { HelpActivityDailyComponent } from '../help-dialog/help-activity-daily/help-activity-daily.component';
+import { HelpMwUsageComponent } from '../help-dialog/help-mw-usage/help-mw-usage.component';
 
 
 
@@ -16,9 +21,9 @@ import { DailyActivityComponent } from '../daily-activity/daily-activity.compone
 })
 export class SmartHomeDashboardComponent {
   //@ViewChild('lineChart') chart: ElementRef;
-  @ViewChild('mwUsage', {static: true}) mwUsageGraph: MWUsageComponent;
-  @ViewChild('dailyActivity', {static: true}) dailyActivityGraph: DailyActivityComponent;
-  
+  @ViewChild('mwUsage', { static: true }) mwUsageGraph: MWUsageComponent;
+  @ViewChild('dailyActivity', { static: true }) dailyActivityGraph: DailyActivityComponent;
+
   chartData = [];
 
   LineChart: any;
@@ -46,8 +51,20 @@ export class SmartHomeDashboardComponent {
 
   constructor(public dialog: MatDialog, private breakpointObserver: BreakpointObserver) { }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(HelpDialogComponentComponent, {
+  openDialog(card): void {
+    var dialogComponent;
+    if (card == 'med')
+      dialogComponent = HelpMedComponent
+    else if (card == 'activity_hourly')
+      dialogComponent = HelpActivityHourlyComponent
+    else if (card == 'activity_monthly')
+      dialogComponent = HelpActivityMonthlyComponent
+    else if (card == 'activity_daily')
+      dialogComponent = HelpActivityDailyComponent
+    else if (card == 'mw_usage')
+      dialogComponent = HelpMwUsageComponent
+
+    const dialogRef = this.dialog.open(dialogComponent, {
       width: '250px',
       data: {}
     });

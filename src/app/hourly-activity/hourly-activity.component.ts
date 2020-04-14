@@ -331,6 +331,9 @@ export class HourlyActivityComponent implements OnInit {
       .text("Hour");
 
 
+
+
+
   }
 
 }

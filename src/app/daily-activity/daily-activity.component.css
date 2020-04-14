@@ -3,3 +3,8 @@
     opacity: 0.6;
 }
 
+::ng-deep .gridA >.tick >line{
+    stroke:grey;
+    stroke-width: 0.5;
+}
+

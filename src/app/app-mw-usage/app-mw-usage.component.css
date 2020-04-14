@@ -20,3 +20,28 @@
 ::ng-deep .yAxis > .tick > line{
     display:none;
 }
+
+.redDot {
+    height: 10px;
+    width: 10px;
+    background-color: red;
+    opacity:0.8;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .greenDot {
+    height: 10px;
+    width: 10px;
+    background-color: green;
+    opacity:0.8;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .space{
+    height: 10px;
+    width: 10px;
+    
+    display: inline-block;
+  }

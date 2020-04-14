@@ -275,18 +275,22 @@ export class HourlyActivityComponent implements OnInit {
     var familyRoomLine = d3.line()
       .x(function (d) { return x(d["hour"]) })
       .y(function (d) { return y(d["family room"]) })
+      .curve(d3.curveMonotoneX);
 
     var bathroomLine = d3.line()
       .x(function (d) { return x(d["hour"]) })
       .y(function (d) { return y(d["master bathroom"]) })
+      .curve(d3.curveMonotoneX);
 
     var kitchenLine = d3.line()
       .x(function (d) { return x(d["hour"]) })
       .y(function (d) { return y(d["kitchen"]) })
+      .curve(d3.curveMonotoneX);
 
     var bedroomLine = d3.line()
       .x(function (d) { return x(d["hour"]) })
       .y(function (d) { return y(d["master bedroom"]) })
+      .curve(d3.curveMonotoneX);
 
     this.svg.append("path")
       .data([this.dailyActivityData])

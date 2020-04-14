@@ -384,8 +384,8 @@ export class MedWeeklyComponent implements OnInit {
 
   ngAfterViewInit() {
     var margin = { top: 20, right: 20, bottom: 50, left: 60 },
-      width = 600 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+      width = 1200 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
 
 
     this.svg = d3.select(this.hostElement).append('svg')
@@ -400,40 +400,52 @@ export class MedWeeklyComponent implements OnInit {
     var x = d3.scaleTime().range([0, width]);
     var y = d3.scaleTime().range([height, 0]);
 
-    x.domain(d3.extent(this.medData.map(d => { return parseDate(d.date) })));
+    y.domain(d3.extent(this.medData.map(d => { return parseDate(d.date) })));
+    //y.domain(this.medData.map(d => { return d.date }));    
+
+    x.domain([parseTime("00:00:01"), parseTime("23:59:59")]);
+    //x.domain(d3.range(0,24).map(d=>{return d.toString()}));
+
     // Add the X Axis
-    this.svg.append("g")
-      .attr("transform", "translate(0," + (+height + 10) + ")")
-      .call(d3.axisBottom(x));
+    // this.svg.append("g")
+    //   .attr("transform", "translate(0," + (+height + 10) + ")")
+    //   .call(d3.axisBottom(x).ticks(24));
 
-    y.domain([parseTime("00:00:01"), parseTime("23:59:59")]);
+    // // Add the Y Axis
+    // this.svg.append("g")
+    //   .call(d3.axisLeft(y));
 
-    // Add the Y Axis
-    this.svg.append("g")
-      .call(d3.axisLeft(y).ticks(5));
-
-    var eventGroup = this.svg.selectAll(".event")
-      .data(this.medData.filter(d => { if (d.event != "") return d }))
+    var eventGroup = this.svg.selectAll(".day")
+      .data(this.medData.filter(d => { if (d.event != "") return d }))  //
       .enter()
       .append("g")
-      .attr("class", "event")
+      .attr("class", "day")
       .attr("transform", function (d) {
-        var xpos = x(parseDate(d.date));
-        var ypos = y(parseTime(d.time));
+        //var xpos = x(d.time.split(":")[0]);
+        var ypos = y(parseDate(d.date))
+        var xpos = x(parseTime(d.time));
         return "translate(" + xpos + "," + ypos + ")";
       })
 
-    var events = eventGroup.selectAll("circle")
+    var events = eventGroup.selectAll("g")
       .data(function (d) { 
-        return d.event.split(",").map(e=> {return {eventDay:e, day:d.day}}) 
+        return d.event.split(",").map(e=> {
+          return {eventDay:e, day:d.day, len:d.event.split(",").length}
+        }) 
       })
       .enter()
       .append("g")
 
-    events.append("circle")
-      .attr("r", 5)
-      .attr("cx", function (d, i) {
-        return 15 * i;
+    events.append("rect")
+      .attr("class", "event")
+      .attr("height",function(d){
+        return 10;
+        //return y.bandwidth()/d.len;
+      } )
+      .attr("width",10)//x.bandwidth())
+      .attr("y", function (d, i) {
+        return 10*i;
+        //return (y.bandwidth()/d.len) * i;
       })
       .style("fill", function (d) {
         var eventDay = d.eventDay.split("-")[0];
@@ -446,6 +458,39 @@ export class MedWeeklyComponent implements OnInit {
         }       
         return "red"
       })
+      .style("opacity", 0.8)
+      
+      // gridlines in x axis function
+function make_x_gridlines() {		
+  return d3.axisBottom(x)
+      .ticks(24)
+}
+
+// gridlines in y axis function
+function make_y_gridlines() {		
+  return d3.axisLeft(y)
+      //.ticks(5)
+}
+
+// add the X gridlines
+this.svg.append("g")			
+.attr("class", "grid")
+.attr("transform", "translate(0," + height + ")")
+.call(make_x_gridlines()
+    .tickSize(-height)
+    //.tickFormat("")
+)
+
+// add the Y gridlines
+this.svg.append("g")			
+.attr("class", "grid")
+.call(make_y_gridlines()
+    .tickSize(-width)
+    //.tickFormat("")
+)
+
+      
+    
     // eventGroup.append("circle")
     //   .attr("r", 5)
     //   .style("fill", function (d) {
@@ -483,7 +528,7 @@ export class MedWeeklyComponent implements OnInit {
       .attr("x", 0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Time");
+      .text("Date");
 
     this.svg.append("text")
       .attr("class", "axisLabel")
@@ -491,7 +536,7 @@ export class MedWeeklyComponent implements OnInit {
         "translate(" + (width / 2) + " ," +
         (height + margin.top + 20) + ")")
       .style("text-anchor", "middle")
-      .text("Date");
+      .text("Time");
 
   }
 

@@ -138,7 +138,7 @@ export class MWUsageComponent implements OnInit {
 
   ngAfterViewInit() {
 
-    var margin = { top: 20, right: 20, bottom: 50, left: 50 },
+    var margin = { top: 20, right: 50, bottom: 50, left: 50 },
       width = 600 - margin.left - margin.right,
       height = 200 - margin.top - margin.bottom;
 
@@ -149,7 +149,8 @@ export class MWUsageComponent implements OnInit {
       .range([0, width])
 
     var y = d3.scaleLinear()
-      .range([height, 0]);
+      .range([height, 0])
+      .interpolate(d3.interpolateRound);;
 
     var segmentScale = d3.scaleBand()
       .range([height, 0]);
@@ -173,53 +174,87 @@ export class MWUsageComponent implements OnInit {
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
+    
     // Add the X Axis
     this.svg.append("g")
-      .attr("transform", "translate(0," + (+height + 10) + ")")
-      .call(d3.axisBottom(x));
+      .attr("transform", "translate(0," + 0 + ")")
+      .attr("class", "xAxis")
+      .call(d3.axisTop(x));
 
     // Add the Y Axis
     this.svg.append("g")
+      .attr("class", "yAxis")
       .call(d3.axisLeft(y).ticks(5))
     //.call(g => g.select(".domain").remove());
 
+    function make_x_gridlines() {
+      return d3.axisBottom(x)
+        .ticks(8)
+    }
+    function make_y_gridlines() {
+      return d3.axisLeft(y)
+        .ticks(5)
+    }
+
+    this.svg.append("g")
+      .attr("class", "grid")
+      .attr("transform", "translate(0," + height + ")")
+      .style("stroke", "grey")
+      .style("stroke-width", 0.5)
+      .call(make_x_gridlines()
+        .tickSize(-height)
+      )
+
+
+    // this.svg.append("g")
+    //   .attr("class", "grid")
+    //   .style("stroke", "grey")
+    //   .style("stroke-width", 0.5)
+    //   .call(make_y_gridlines()
+    //     .tickSize(-width)
+    //     //.tickFormat("")
+    //   )
+
+    d3.select(".grid").selectAll("text").remove();
+    d3.select(".grid").select("path").remove();
+
     var max = d3.max(this.mwDoorSensorData.map(d => { return d["duration_min"] }));
     var durationSegments = [0, 60, max];
-    // this.svg.append("rect")
-    //   .attr("x", 0)
-    //   .attr("y", y(durationSegments[1]))
-    //   .attr("height", y(durationSegments[0]) - y(durationSegments[1]))
-    //   .attr("width", width)
-    //   .style("fill", "green")
-    //   .style("opacity", "0.3")
+    this.svg.append("rect")
+      .attr("x", 0)
+      .attr("y", y(durationSegments[1]))
+      .attr("height", y(durationSegments[0]) - y(durationSegments[1]))
+      .attr("width", width)
+      .style("fill", "whitesmoke")
+      .style("opacity", "0.2")
 
-    // this.svg.append("rect")
-    //   .attr("x", 0)
-    //   .attr("y", y(durationSegments[2]))
-    //   .attr("height", y(durationSegments[1]) - y(durationSegments[2]))
-    //   .attr("width", width)
-    //   .style("fill", "red")
-    //   .style("opacity", "0.3")
+    this.svg.append("rect")
+      .attr("x", 0)
+      .attr("y", y(durationSegments[2]))
+      .attr("height", y(durationSegments[1]) - y(durationSegments[2]))
+      .attr("width", width)
+      .style("fill", "red")
+      .style("opacity", "0.2")
 
     var thresholdLine = d3.line()
       .x(function (d) { return x(d["time_parsed"]); })
       .y(function (d) { return y(d["duration_min"]); });
 
+    //warn line
+    // this.svg.append("line")
+    //   .attr("x1", x(x.domain()[0]))
+    //   .attr("y1", y(60))
+    //   .attr("x2", x(x.domain()[1]))
+    //   .attr("y2", y(60))
+    //   .style("stroke", "red")
 
-    this.svg.append("line")
-      .attr("x1", x(x.domain()[0]))
-      .attr("y1", y(60))
-      .attr("x2", x(x.domain()[1]))
-      .attr("y2", y(60))
-      .style("stroke", "red")
-
-    this.svg.append("text")
-      .attr("x", x(x.domain()[1]))
-      .attr("y", y(60))
-      .attr("dy", "1em")
-      .attr("text-anchor", "end")
-      .text("60 minutes")
-      .attr("class", "warnLineText")
+    // this.svg.append("text")
+    //   .attr("x", x(x.domain()[1]))
+    //   .attr("y", y(60) - 10)
+    //   .attr("dy", "1em")
+    //   .attr("text-anchor", "start")
+    //   .text("60 min")
+    //   .attr("class", "warnLineText")
 
     this.svg.selectAll("dot")
       .data(this.mwDoorSensorData)
@@ -234,6 +269,13 @@ export class MWUsageComponent implements OnInit {
           return "red";
       })
       .style("opacity", "0.6")
+      .style("stroke", function (d) {
+        if (d["duration_min"] < 60)
+          return "green";
+        else
+          return "red";
+      })
+
 
     this.svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -246,10 +288,10 @@ export class MWUsageComponent implements OnInit {
     this.svg.append("text")
       .attr("transform",
         "translate(" + (width / 2) + " ," +
-        (height + margin.top + 20) + ")")
+        (height + margin.top) + ")")
       .style("text-anchor", "middle")
       .text("Time");
-    
+
   }
 
 

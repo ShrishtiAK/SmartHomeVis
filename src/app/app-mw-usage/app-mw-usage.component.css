@@ -4,3 +4,19 @@
     fill: red;
     font-size: 15px;
 }
+
+::ng-deep .yAxis > path{
+    display:none;
+}
+
+::ng-deep .xAxis > path{
+    display:none;
+}
+
+::ng-deep .xAxis > .tick > line{
+    display:none;
+}
+
+::ng-deep .yAxis > .tick > line{
+    display:none;
+}

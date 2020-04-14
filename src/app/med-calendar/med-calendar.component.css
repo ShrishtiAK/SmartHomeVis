@@ -1,0 +1,28 @@
+
+::ng-deep .match{
+    fill: green;
+    opacity: 0.7;
+    stroke:white;
+}
+
+::ng-deep .mismatch{
+    fill: red;
+    opacity: 0.7;
+    stroke: white;
+}
+
+::ng-deep .refill{
+    fill: steelblue;
+    opacity: 0.7;
+    stroke: white;
+}
+
+::ng-deep circle{
+    fill:white;
+    stroke: gray;
+
+}
+
+::ng-deep .dayEvent{
+    opacity: 0.5;
+}

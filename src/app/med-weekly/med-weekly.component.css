@@ -1,0 +1,8 @@
+::ng-deep rect.event{
+    opacity:0.8;
+    stroke:white;
+}
+
+::ng-deep .grid > g > line{
+    stroke:gray;
+}

@@ -27,7 +27,10 @@ import { MWUsageComponent } from './app-mw-usage/app-mw-usage.component';
 import { DailyActivityComponent } from './daily-activity/daily-activity.component';
 import { HourlyActivityComponent } from './hourly-activity/hourly-activity.component';
 import { MedWeeklyComponent } from './med-weekly/med-weekly.component';
-
+import { MonthlyActivityComponent } from './monthly-activity/monthly-activity.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MedCalendarComponent } from './med-calendar/med-calendar.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,9 @@ import { MedWeeklyComponent } from './med-weekly/med-weekly.component';
     DailyActivityComponent,
     HourlyActivityComponent,
     MedWeeklyComponent,
+    MonthlyActivityComponent,
+    MedCalendarComponent,
+    
     
   ],
   imports: [
@@ -59,7 +65,9 @@ import { MedWeeklyComponent } from './med-weekly/med-weekly.component';
     MatToolbarModule,
     MatTabsModule,
     MatDialogModule,
-    ChartModule
+    ChartModule,
+    MatCheckboxModule,
+    FormsModule
   ],
   providers: [
     {

@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewEncapsulation, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
-
+import d3Tip from "d3-tip"
 
 @Component({
   selector: 'app-mw-usage',
-
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app-mw-usage.component.html',
   styleUrls: ['./app-mw-usage.component.css']
 })
@@ -128,8 +128,15 @@ export class MWUsageComponent implements OnInit {
       "duration_min": 0.7
     }
   ]
+  info = { time: "", duration: "", class: "" };
+  time = "";
+  duration = "";
 
-  constructor(private elRef: ElementRef) {
+  constructor(private ref: ChangeDetectorRef, private elRef: ElementRef) {
+    ref.detach();
+    setInterval(() => {
+      this.ref.detectChanges();
+    }, 500);
     this.hostElement = this.elRef.nativeElement;
   }
 
@@ -174,7 +181,21 @@ export class MWUsageComponent implements OnInit {
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-    
+    const tip = d3Tip()
+
+    tip
+      .attr("class", "d3-tip")
+      .html(function(d){
+        console.log("tip")
+        const tooltip = 
+        `<strong style='color:white'>Freq:</strong> <span style='color:cyan'> </span>`
+        return tooltip
+        return "<p>sdf</p>"
+      })
+      
+
+    this.svg.call(tip)
+
     // Add the X Axis
     this.svg.append("g")
       .attr("transform", "translate(0," + 0 + ")")
@@ -230,7 +251,7 @@ export class MWUsageComponent implements OnInit {
       .x(function (d) { return x(d["time_parsed"]); })
       .y(function (d) { return y(d["duration_min"]); });
 
-
+    var comp = this;
     this.svg.selectAll("dot")
       .data(this.mwDoorSensorData)
       .enter().append("circle")
@@ -250,6 +271,15 @@ export class MWUsageComponent implements OnInit {
         else
           return "red";
       })
+      // .on("click", function (d, i) {
+      //   mouseclick(d, i, comp)
+      // })
+      .on("mouseover", function(d){
+         tip.show(d,this)
+      })
+      .on("mouseout", function(d){
+        tip.hide(d,this)
+      })
 
 
     this.svg.append("text")
@@ -266,6 +296,13 @@ export class MWUsageComponent implements OnInit {
         (height + margin.top) + ")")
       .style("text-anchor", "middle")
       .text("Time");
+
+    function mouseclick(d, i, comp) {
+      console.log(d);
+      comp.info.time = d.time.slice(0, 5);
+      comp.info.duration = d.duration_min;
+      comp.info.class = d.duration_min < 60 ? "ok" : "warn";
+    }
 
   }
 

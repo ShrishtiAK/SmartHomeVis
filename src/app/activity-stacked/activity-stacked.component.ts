@@ -1,13 +1,37 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import * as d3 from 'd3';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexResponsive,
+  ApexXAxis,
+  ApexLegend,
+  ApexFill
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  responsive: ApexResponsive[];
+  xaxis: ApexXAxis;
+  legend: ApexLegend;
+  fill: ApexFill;
+};
+
 @Component({
-  selector: 'app-hourly-activity',
-  templateUrl: './hourly-activity.component.html',
-  styleUrls: ['./hourly-activity.component.css']
+  selector: 'app-activity-stacked',
+  templateUrl: './activity-stacked.component.html',
+  styleUrls: ['./activity-stacked.component.css']
 })
-export class HourlyActivityComponent implements OnInit {
-  hostElement;
-  svg;
+export class ActivityStackedComponent  {
+
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
+
   dailyActivityData = [
     {
       "date": "18-11-2019",
@@ -226,114 +250,87 @@ export class HourlyActivityComponent implements OnInit {
       "curtain sensor": 10
     }
   ];
-  constructor(private elRef: ElementRef) {
-    this.hostElement = this.elRef.nativeElement;
-  }
 
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit() {
-    var margin = { top: 20, right: 20, bottom: 50, left: 50 },
-      width = 600 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
-
-
-    this.svg = d3.select(this.hostElement).append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
-
-
-    var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
-
-    x.domain([0, 23]);
-    // Add the X Axis
-    this.svg.append("g")
-      .attr("transform", "translate(0," + (+height + 10) + ")")
-      .call(d3.axisBottom(x).ticks(24));
-
-    var rooms = ["family room", "kitchen", "master bedroom", "master bathroom"];
-    var roomMaxActivity = [];
-    rooms.forEach(room => {
-      roomMaxActivity.push(d3.max(this.dailyActivityData.map(d => {
-        return d[room];
-      })))
+  constructor() {
+    var familyRoomData = this.dailyActivityData.map(d=>{
+      return d["family room"]
     })
-    var yMax = d3.max(roomMaxActivity);
-    console.log(yMax);
-
-    y.domain([0, yMax]);
-
-    // Add the Y Axis
-    this.svg.append("g")
-      .call(d3.axisLeft(y).ticks(5));
-
-    var familyRoomLine = d3.line()
-      .x(function (d) { return x(d["hour"]) })
-      .y(function (d) { return y(d["family room"]) })
-      .curve(d3.curveMonotoneX);
-
-    var bathroomLine = d3.line()
-      .x(function (d) { return x(d["hour"]) })
-      .y(function (d) { return y(d["master bathroom"]) })
-      .curve(d3.curveMonotoneX);
-
-    var kitchenLine = d3.line()
-      .x(function (d) { return x(d["hour"]) })
-      .y(function (d) { return y(d["kitchen"]) })
-      .curve(d3.curveMonotoneX);
-
-    var bedroomLine = d3.line()
-      .x(function (d) { return x(d["hour"]) })
-      .y(function (d) { return y(d["master bedroom"]) })
-      .curve(d3.curveMonotoneX);
-
-    this.svg.append("path")
-      .data([this.dailyActivityData])
-      .attr("class", "familyRoomLine")
-      .attr("d", familyRoomLine);
-
-    this.svg.append("path")
-      .data([this.dailyActivityData])
-      .attr("class", "bathroomLine")
-      .attr("d", bathroomLine);
-
-    this.svg.append("path")
-      .data([this.dailyActivityData])
-      .attr("class", "bedroomLine")
-      .attr("d", bedroomLine);
-
-    this.svg.append("path")
-      .data([this.dailyActivityData])
-      .attr("class", "kitchenLine")
-      .attr("d", kitchenLine);
-
-
-    this.svg.append("text")
-      .attr("class", "axisLabel")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x", 0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Events per hour");
-
-    this.svg.append("text")
-      .attr("class", "axisLabel")
-      .attr("transform",
-        "translate(" + (width / 2) + " ," +
-        (height + margin.top + 20) + ")")
-      .style("text-anchor", "middle")
-      .text("Hour");
-
-
-
-
-
+    var bedroomData = this.dailyActivityData.map(d=>{
+      return d["master bedroom"]
+    })
+    var bathroomData = this.dailyActivityData.map(d=>{
+      return d["master bathroom"]
+    })
+    var kitchenData = this.dailyActivityData.map(d=>{
+      return d["kitchen"]
+    })
+    this.chartOptions = {
+      series: [
+        {
+          name: "Family Room",
+          data: familyRoomData
+        },
+        {
+          name: "Master Bedroom",
+          data: bedroomData
+        },
+        {
+          name: "Kitchen",
+          data: kitchenData
+        },
+        {
+          name: "Master Bathroom",
+          data: bathroomData
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 220,
+        stacked: true,
+        toolbar: {
+          show: false
+        },
+        zoom: {
+          enabled: true
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        bar: {
+          horizontal: false
+        }
+      },
+      xaxis: {
+        type: "category",
+        categories: [
+          "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"
+        ],
+        
+      },
+    
+      legend: {
+        position: "top",
+        offsetY: 0
+      },
+      fill: {
+        opacity: 0.8
+      },
+      dataLabels:{
+        enabled:false
+      },
+      
+    };
   }
 
 }

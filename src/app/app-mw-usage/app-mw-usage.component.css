@@ -45,3 +45,16 @@
     
     display: inline-block;
   }
+
+  .info{
+      background-color: silver;
+  }
+
+  .ok{
+    background-color: lightgray;
+    color:green;
+  }
+  .warn{
+      background-color: lightgray;
+      color:red;
+  }

@@ -1,13 +1,40 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexLegend,
+  ApexStroke,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip
+} from "ng-apexcharts";
 import * as d3 from 'd3';
 
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: ApexXAxis;
+  fill: ApexFill;
+  tooltip: ApexTooltip;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+};
+
+
 @Component({
-  selector: 'app-daily-activity',
-  templateUrl: './daily-activity.component.html',
-  styleUrls: ['./daily-activity.component.css']
+  selector: 'app-activity-bar',
+  templateUrl: './activity-bar.component.html',
+  styleUrls: ['./activity-bar.component.css']
 })
-export class DailyActivityComponent implements OnInit {
-  hostElement;
+export class ActivityBarComponent  {
   dailyActivityData = [
     {
       "date": "18-11-2019",
@@ -226,106 +253,73 @@ export class DailyActivityComponent implements OnInit {
       "curtain sensor": 10
     }
   ];
-  svg;
 
-  constructor(private elRef: ElementRef) {
-    this.hostElement = this.elRef.nativeElement;
-  }
+  
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
 
-  ngOnInit(): void {
-  }
-
-
-  ngAfterViewInit() {
-    var margin = { top: 20, right: 20, bottom: 50, left: 50 },
-      width = 600 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
-
-
-    this.svg = d3.select(this.hostElement).append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
-
-
-    var x = d3.scaleBand().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
-
+  constructor() {
     var totalActivity = [];
-
     var rooms = ["family room", "master bathroom", "kitchen", "master bedroom"];
     rooms.forEach(room => {
       var total = d3.sum(this.dailyActivityData.map(d => { return d[room] }));
       totalActivity.push({ room: room, total: total });
+    });
+    var totals = totalActivity.map(d=>{
+      return d.total;
     })
-
-
-    x.domain(rooms);
-    y.domain([0, d3.max(totalActivity.map(d => { return d.total }))]);
-
-    // Add the X Axis
-    this.svg.append("g")
-      .attr("class", "xAxis")
-      .attr("transform", "translate(0," + (+height + 10) + ")")
-      .call(d3.axisBottom(x));
-
-    // Add the Y Axis
-    this.svg.append("g")
-      .attr("class", "yAxis")
-      .call(d3.axisLeft(y).ticks(5));
-
-    function make_y_gridlines() {
-      return d3.axisLeft(y)
-        .ticks(5)
-    }
-
-    this.svg.append("g")
-      .attr("class", "gridA")
-      .style("stroke", "grey")
-      .call(make_y_gridlines()
-        .tickSize(-width)
-        //.tickFormat("")
-      )
-
-    d3.select(".gridA").selectAll("text").remove();
-    d3.select(".gridA").select("path").remove();
-
-    var barPadding = 20;
-    this.svg.selectAll(".bar")
-      .data(totalActivity)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("width", x.bandwidth() - barPadding)
-      .attr("height", function (d) {
-        return height - y(d.total)
-      })
-      .attr("x", function (d, i) {
-        return x(d.room) + (barPadding / 2);
-      })
-      .attr("y", function (d) {
-        return y(d.total);
-      })
-
-    this.svg.append("text")
-      .attr("class", "axisLabel")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x", 0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Total events");
-
-    this.svg.append("text")
-      .attr("class", "axisLabel")
-      .attr("transform",
-        "translate(" + (width / 2) + " ," +
-        (height + margin.top ) + ")")
-      .style("text-anchor", "middle")
-      .text("Room");
-
+    this.chartOptions = {
+      series: [
+        {
+          name: "Activity",
+          data: totals
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 220,
+        toolbar: {
+          show: false
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "55%"
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ["transparent"]
+      },
+      xaxis: {
+        categories: [
+          "Family Room",
+          "Master Bedroom",
+          "Kitchen",
+          "Master Bathroom"
+        ]
+      },
+      yaxis: {
+        title: {
+          text: "Total events"
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      tooltip: {
+        y: {
+          formatter: function(val) {
+            return + val + " events";
+          }
+        }
+      }
+    };
   }
 
 }

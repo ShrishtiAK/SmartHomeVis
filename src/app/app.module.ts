@@ -24,9 +24,6 @@ import { ChartModule } from 'angular-highcharts';
 import { HighchartsService } from './highcharts.service';
 import { LinechartComponentComponent } from './linechart-component/linechart-component.component';
 import { MWUsageComponent } from './app-mw-usage/app-mw-usage.component';
-import { DailyActivityComponent } from './daily-activity/daily-activity.component';
-import { HourlyActivityComponent } from './hourly-activity/hourly-activity.component';
-import { MedWeeklyComponent } from './med-weekly/med-weekly.component';
 import { MonthlyActivityComponent } from './monthly-activity/monthly-activity.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
@@ -36,6 +33,26 @@ import { HelpActivityDailyComponent } from './help-dialog/help-activity-daily/he
 import { HelpMwUsageComponent } from './help-dialog/help-mw-usage/help-mw-usage.component';
 import { HelpActivityHourlyComponent } from './help-dialog/help-activity-hourly/help-activity-hourly.component';
 import { HelpActivityMonthlyComponent } from './help-dialog/help-activity-monthly/help-activity-monthly.component';
+import { MatTableModule } from '@angular/material/table';
+import { ActivityStackedComponent } from './activity-stacked/activity-stacked.component';
+import { NgApexchartsModule } from "ng-apexcharts";
+import { MwScatterComponent } from './mw-scatter/mw-scatter.component';
+import { ActivityBarComponent } from './activity-bar/activity-bar.component';
+import { SummaryDailyComponent } from './summary-daily/summary-daily.component';
+import { WeightMonthlyComponent } from './weight-monthly/weight-monthly.component';
+import { WeightSummaryComponent } from './weight-summary/weight-summary.component';
+import { FusionChartsModule } from 'angular-fusioncharts';
+// Load FusionCharts
+import * as FusionCharts from 'fusioncharts';
+
+// Load Widgets
+import * as Widgets from 'fusioncharts/fusioncharts.widgets';
+
+// Load FusionTheme Theme
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import { HelpWeightComponent } from './help-dialog/help-weight/help-weight.component'
+// Add dependencies to FusionChartsModule
+FusionChartsModule.fcRoot(FusionCharts, Widgets, FusionTheme);
 
 @NgModule({
   declarations: [
@@ -47,9 +64,6 @@ import { HelpActivityMonthlyComponent } from './help-dialog/help-activity-monthl
     HelpDialogComponentComponent,
     LinechartComponentComponent,
     MWUsageComponent,
-    DailyActivityComponent,
-    HourlyActivityComponent,
-    MedWeeklyComponent,
     MonthlyActivityComponent,
     MedCalendarComponent,
     HelpMedComponent,
@@ -57,6 +71,13 @@ import { HelpActivityMonthlyComponent } from './help-dialog/help-activity-monthl
     HelpMwUsageComponent,
     HelpActivityHourlyComponent,
     HelpActivityMonthlyComponent,
+    ActivityStackedComponent,
+    MwScatterComponent,
+    ActivityBarComponent,
+    SummaryDailyComponent,
+    WeightMonthlyComponent,
+    WeightSummaryComponent,
+    HelpWeightComponent,
     
     
   ],
@@ -77,7 +98,10 @@ import { HelpActivityMonthlyComponent } from './help-dialog/help-activity-monthl
     MatDialogModule,
     ChartModule,
     MatCheckboxModule,
-    FormsModule
+    FormsModule,
+    MatTableModule,
+    NgApexchartsModule,
+    FusionChartsModule
   ],
   providers: [
     {

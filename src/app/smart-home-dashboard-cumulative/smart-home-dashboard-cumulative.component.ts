@@ -3,6 +3,12 @@ import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HelpDialogComponentComponent } from '../help-dialog-component/help-dialog-component.component';
 import { MatDialog } from '@angular/material/dialog';
+import { HelpMedComponent } from '../help-dialog/help-med/help-med.component';
+import { HelpActivityHourlyComponent } from '../help-dialog/help-activity-hourly/help-activity-hourly.component';
+import { HelpActivityMonthlyComponent } from '../help-dialog/help-activity-monthly/help-activity-monthly.component';
+import { HelpActivityDailyComponent } from '../help-dialog/help-activity-daily/help-activity-daily.component';
+import { HelpMwUsageComponent } from '../help-dialog/help-mw-usage/help-mw-usage.component';
+import { HelpWeightComponent } from '../help-dialog/help-weight/help-weight.component';
 
 @Component({
   selector: 'app-smart-home-dashboard-cumulative',
@@ -32,17 +38,31 @@ export class SmartHomeDashboardCumulativeComponent {
     })
   );
 
-  constructor(public dialog: MatDialog,private breakpointObserver: BreakpointObserver) {}
+  constructor(public dialog: MatDialog, private breakpointObserver: BreakpointObserver) { }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(HelpDialogComponentComponent, {
+  openDialog(card): void {
+    var dialogComponent;
+    if (card == 'med')
+      dialogComponent = HelpMedComponent
+    else if (card == 'activity_hourly')
+      dialogComponent = HelpActivityHourlyComponent
+    else if (card == 'activity_monthly')
+      dialogComponent = HelpActivityMonthlyComponent
+    else if (card == 'activity_daily')
+      dialogComponent = HelpActivityDailyComponent
+    else if (card == 'mw_usage')
+      dialogComponent = HelpMwUsageComponent
+    else if (card == 'weight')
+      dialogComponent = HelpWeightComponent
+
+    const dialogRef = this.dialog.open(dialogComponent, {
       width: '250px',
-      data: { }
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      
+
     });
   }
 }

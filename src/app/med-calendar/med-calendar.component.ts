@@ -1,11 +1,19 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
 import { DataService } from '../data.service';
-import { map } from 'highcharts';
+import { map, time } from 'highcharts';
+
+export interface tableElement {
+  time: string;
+  event: string;  
+}
+const DATA: tableElement[] = [{time:"11:00", event:"Sun"},
+{time:"11:00", event:"Sun"}]
 
 @Component({
   selector: 'app-med-calendar',
   templateUrl: './med-calendar.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./med-calendar.component.css']
 })
 export class MedCalendarComponent implements OnInit {
@@ -13,7 +21,14 @@ export class MedCalendarComponent implements OnInit {
   svg;
   data;
   summaryData;
-  constructor(private dataService: DataService, private elRef: ElementRef) {
+  tableData = [];
+  displayedColumns: string[] = ['time','event'];
+
+  constructor(private ref: ChangeDetectorRef,private dataService: DataService, private elRef: ElementRef) {
+    ref.detach();
+    setInterval(() => {
+      this.ref.detectChanges();
+    }, 500);
     this.hostElement = this.elRef.nativeElement;
     this.data = dataService.getMedCalendarData();
     this.summaryData = dataService.getMedCalSummaryData();
@@ -21,15 +36,38 @@ export class MedCalendarComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  updateData(data){
+    this.tableData = [];
+    var temp = [];
+    data.forEach(d => {
+      var cls;
+      var time;
+      var event;
+      if(d.event == "Refill")
+        cls = "refillText"
+      else if(d.event == d.day)
+        cls = "matchText"
+      else 
+        cls = "mismatchText"
+      
+      if(d.event != "Refill")
+        event = d.event.slice(0,3);
+      else  
+        event = d.event;
+
+      time = d.time.slice(0,5);  
+      temp.push({"time":time,"event":event,"class":cls});    
+    })
+    this.tableData = temp;
+  }
 
   ngAfterViewInit() {
-    var margin = { top: 20, right: 20, bottom: 50, left: 20 },
+    var margin = { top: 10, right: 20, bottom: 50, left: 20 },
       width = 600 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
-    // var width = 960,
-    //   height = 750,
+      height = 200 - margin.top - margin.bottom;
+   
     var cellSize = 50; // cell size
-    var cellHeight = 35;
+    var cellHeight = 30;
     var cellWidth = 60;
 
     var no_months_in_a_row = Math.floor(width / (cellSize * 7 + 50));
@@ -67,23 +105,10 @@ export class MedCalendarComponent implements OnInit {
       .text(function (d) {
         return d;
       })
-    // var days = svg.selectAll(".day")
-    //   .data(d3.timeDays(new Date(2020, 1, 1), new Date(2020, 2, 1)))
-    //   .enter().append("circle")
-    //   .attr("class", "day")
-    //   .attr("r", cellWidth / 2 - 2)
-    //   .attr("cx", function (d) {
-    //     return (Number(day(d)) * cellWidth) + cellWidth / 2;
-    //   })
-    //   .attr("cy", function (d) {
-    //     var week_diff = Number(week(d)) - Number(week(new Date(Number(year(d)), Number(month(d)) - 1, 1)));
-    //     var row_level = Math.ceil(Number(month(d)) / (no_months_in_a_row));
-    //     return (week_diff * cellHeight) + 10 + cellWidth / 2 //+ row_level * cellSize * 8 - cellSize / 2 - shift_up;
-    //   })
-    //   .datum(format);
-
+   
+    var comp = this;
     var dayG = svg.selectAll("g")
-      .data(d3.timeDays(new Date(2020, 1, 1), new Date(2020, 2, 1)))
+      .data(d3.timeDays(new Date(2019, 11, 1), new Date(2019, 12, 1)))
       .enter().append("g")
       .attr("transform", function (d, i) {
         var x = (Number(day(d)) * cellWidth);
@@ -93,9 +118,9 @@ export class MedCalendarComponent implements OnInit {
       })
       .datum(format);
 
-    dayG.on("click", mouseclick)
-
-
+    dayG.on("click", function(d,i){    
+      mouseclick(d,i,comp);
+    })    
 
     var nestedSummaryData = d3.nest()
       .key(function (d) { return d["date"] })
@@ -164,85 +189,26 @@ export class MedCalendarComponent implements OnInit {
       }
     })
 
-    var nestedData = d3.nest()
-      .key(function (d) { return d["date"] })
-      .object(data)
-
-
-    // days.filter(function (d) {
-    //   return d in nestedData;
-    // }).attr("class", function (d) {
-    //   return (match(nestedData[d]))
-
-    // })
-
-    function match(events) {
-      for (var i = 0; i < events.length; i++) {
-        if (events[i].day == events[i].event)
-          return "match";
-        if (events[i].event == "Refill")
-          return "refill"
-      }
-      return "mismatch";
-    }
-
-
-
-    function mouseclick(d, i) {
+    function mouseclick(d, i, comp) {
       dayG.selectAll("rect").style("opacity", 0.5);
 
       dayG.filter(dg => {return dg == d}).selectAll("rect")
       .style("opacity", 0.8);
 
       if (d in nestedSummaryData) {
-        console.log(nestedSummaryData[d]);
-        showMoreInfo(nestedSummaryData[d]);
+        comp.updateData(nestedSummaryData[d]);        
       }
       else {
-        showMoreInfo(null);
+        
+        comp.updateData([{"time":"", "event":""}]);  
       }
 
     }
 
-    function showMoreInfo(data) {
-      d3.select(".moreInfo").remove();
-
-
-      var moreInfo = svg.append("g")
-        .attr("transform", "translate(450,0)")
-        .attr("class", "moreInfo");
-
-     
-
-      if (data != null) {
-      
-        moreInfo.append("text")
-        .text("Time | Box opened")
-        .attr("x", 0)
-        .attr("y", 0)
-
-        moreInfo.selectAll(".eventText")
-          .data(data)
-          .enter()
-          .append("text")
-          .attr("class", "eventText")
-          .text(function (d) {
-            return d["time"] + " | " + d["event"];
-          })
-          .attr("x", 0)
-          .attr("y", function (d, i) {
-            return 20 * i + 20;
-          })
-      }
-      else{
-        moreInfo.append("text")
-          .text("No pills taken")
-      }
-
-    }
-
-
+    
   }
+
+ 
 
 
 

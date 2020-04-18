@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HourlyActivityComponent } from './hourly-activity.component';
+import { HelpWeightComponent } from './help-weight.component';
 
-describe('HourlyActivityComponent', () => {
-  let component: HourlyActivityComponent;
-  let fixture: ComponentFixture<HourlyActivityComponent>;
+describe('HelpWeightComponent', () => {
+  let component: HelpWeightComponent;
+  let fixture: ComponentFixture<HelpWeightComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HourlyActivityComponent ]
+      declarations: [ HelpWeightComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HourlyActivityComponent);
+    fixture = TestBed.createComponent(HelpWeightComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

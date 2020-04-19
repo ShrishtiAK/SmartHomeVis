@@ -5,8 +5,9 @@ import {
   ChartComponent,
   ApexDataLabels,
   ApexPlotOptions,
+  ApexYAxis,
   ApexResponsive,
-  ApexXAxis,
+  ApexXAxis, 
   ApexLegend,
   ApexFill
 } from "ng-apexcharts";
@@ -18,6 +19,7 @@ export type ChartOptions = {
   plotOptions: ApexPlotOptions;
   responsive: ApexResponsive[];
   xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
   legend: ApexLegend;
   fill: ApexFill;
 };
@@ -285,13 +287,10 @@ export class ActivityStackedComponent  {
       ],
       chart: {
         type: "bar",
-        height: 220,
-        stacked: true,
+        height: 240,
+        stacked:true,
         toolbar: {
           show: false
-        },
-        zoom: {
-          enabled: true
         }
       },
       responsive: [
@@ -311,18 +310,26 @@ export class ActivityStackedComponent  {
           horizontal: false
         }
       },
+      yaxis: {
+        title: {
+          text: "Events"
+        }
+      },
       xaxis: {
         type: "category",
         categories: [
           "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"
         ],
+        title: {
+          text: "Hour"
+        }
         
-      },
-    
+      },  
       legend: {
         position: "top",
         offsetY: 0
       },
+     
       fill: {
         opacity: 0.8
       },

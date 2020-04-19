@@ -10,6 +10,7 @@ import {
   ApexPlotOptions,
   ApexResponsive,
   ApexXAxis,
+  ApexYAxis,
   ApexLegend,
   ApexFill
 } from "ng-apexcharts";
@@ -21,6 +22,7 @@ export type ChartOptions = {
   plotOptions: ApexPlotOptions;
   responsive: ApexResponsive[];
   xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
   legend: ApexLegend;
   fill: ApexFill;
 };
@@ -128,6 +130,11 @@ export class MonthlyActivityComponent  {
       xaxis: {
         type: "category",
         categories: dates
+      },
+      yaxis: {
+        title:{
+          text: "Total events"
+        }
       },
       legend: {
         position: "top",

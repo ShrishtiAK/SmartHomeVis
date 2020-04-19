@@ -22,7 +22,6 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ChartModule } from 'angular-highcharts';
 import { HighchartsService } from './highcharts.service';
-import { LinechartComponentComponent } from './linechart-component/linechart-component.component';
 import { MWUsageComponent } from './app-mw-usage/app-mw-usage.component';
 import { MonthlyActivityComponent } from './monthly-activity/monthly-activity.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -62,7 +61,6 @@ FusionChartsModule.fcRoot(FusionCharts, Widgets, FusionTheme);
     TabComponentComponent,
     SmartHomeDashboardCumulativeComponent,
     HelpDialogComponentComponent,
-    LinechartComponentComponent,
     MWUsageComponent,
     MonthlyActivityComponent,
     MedCalendarComponent,

@@ -76,7 +76,6 @@ export class WeightMonthlyComponent {
       yaxis: {
         title: {
           text: "Weight",
-          offsetX: 10
         }
       },
       xaxis: {

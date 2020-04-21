@@ -129,7 +129,10 @@ export class MonthlyActivityComponent  {
       },
       xaxis: {
         type: "category",
-        categories: dates
+        categories: dates,
+        title: {
+          text: "Date"
+        }
       },
       yaxis: {
         title:{
